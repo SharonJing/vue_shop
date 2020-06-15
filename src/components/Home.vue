@@ -11,21 +11,36 @@
     <!-- 主体区域 -->
     <el-container>
       <!-- 侧边栏 -->
-      <el-aside width="200px">
-        <el-menu background-color="#333744" text-color="#fff" active-text-color="#ffd04b">
+      <el-aside :width="isCollapse ? '64px':'200px'">
+        <div class="toggle-button" @click="toggleclick">|||</div>
+        <el-menu
+          background-color="#333744"
+          text-color="#fff"
+          active-text-color="#409eff"
+          :unique-opened="true"
+          :collapse="isCollapse"
+          :collapse-transition="false"
+          :router="true"
+          :default-active="activePath"
+        >
           <!-- 一级菜单 -->
-          <el-submenu :index="item.id+''" v-for="item in menuList" :key="item.id">
+          <el-submenu :index="item.path" v-for="item in menuList" :key="item.id">
             <!-- 一级菜单模板区域 -->
             <template slot="title">
               <!-- 图标 -->
-              <i class="el-icon-location"></i>
+              <i :class="iconfontObj[item.id]"></i>
               <!-- 文字 -->
               <span>{{item.authName}}</span>
             </template>
             <!-- 二级菜单 -->
-            <el-menu-item :index="subItem.id+''" v-for="subItem in item.children" :key="subItem.id">
+            <el-menu-item
+              :index="'/'+subItem.path"
+              v-for="subItem in item.children"
+              :key="subItem.id"
+              @click="saveNavStatus('/'+subItem.path)"
+            >
               <template slot="title">
-                <i class="el-icon-location"></i>
+                <i class="el-icon-menu"></i>
                 <span>{{subItem.authName}}</span>
               </template>
             </el-menu-item>
@@ -33,7 +48,9 @@
         </el-menu>
       </el-aside>
       <!-- 右侧主题区域 -->
-      <el-main>Main</el-main>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -42,10 +59,20 @@
   export default {
     created() {
       this.getMenuList();
+      this.activePath = window.sessionStorage.getItem("activePath");
     },
     data() {
       return {
-        menuList: []
+        menuList: [],
+        iconfontObj: {
+          "125": "iconfont icon-users",
+          "103": "iconfont icon-tijikongjian",
+          "101": "iconfont icon-shangpin",
+          "102": "iconfont icon-danju",
+          "145": "iconfont icon-baobiao"
+        },
+        isCollapse: false,
+        activePath: ""
       };
     },
     methods: {
@@ -59,6 +86,12 @@
 
         if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
         this.menuList = res.data;
+      },
+      toggleclick() {
+        this.isCollapse = !this.isCollapse;
+      },
+      saveNavStatus(activePath) {
+        window.sessionStorage.setItem("activePath", activePath);
       }
     }
   };
@@ -83,11 +116,25 @@
   }
   .el-aside {
     background-color: #333744;
+    .el-menu {
+      border-right: 0;
+    }
   }
   .el-main {
     background-color: #eaedf1;
   }
   .home-container {
     height: 100%;
+  }
+  .toggle-button {
+    line-height: 24px;
+    background-color: #4a5046;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    letter-spacing: 0.2em;
+  }
+  .iconfont {
+    margin-right: 10px;
   }
 </style>
