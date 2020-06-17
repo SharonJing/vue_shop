@@ -4,7 +4,7 @@
     <div class="login_box">
       <!-- 头像区域 -->
       <div class="avator_box">
-        <img src="../assets/logo.png" alt />
+        <img src="../assets/logo2.png" alt />
       </div>
       <!-- 表单区域 -->
       <el-form
@@ -75,16 +75,19 @@
   .login_container {
     background-color: #2b4b6b;
     height: 100%;
+    background: url(../assets/benz2.png);
   }
   .login_box {
     width: 450px;
     height: 300px;
-    background-color: #fff;
+    // background-color: #fff;
+    background-color: rgba(0, 0, 0, 0);
     border-radius: 3px;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    // background: url(../assets/bgc.png);
     .avator_box {
       width: 130px;
       height: 130px;
